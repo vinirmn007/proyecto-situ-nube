@@ -1,0 +1,72 @@
+{% extends "./base.html" %}
+{% block title %}
+    PASAJE
+{% endblock %}
+
+{% block body %}
+<center>
+    <article>
+        <p class="animate__animated animate__pulse animate__infinite"
+                    style="font-family: 'Comic Sans MS', sans-serif; font-size: 50px; ">SITU</p><br>
+                
+    </article>        
+</center>
+<div class="card mb-4">
+    <div class="card-body">
+        <h2>Agregar Nuevo Pasajero</h2>
+        <form action="{% url 'pasajeros' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form}}
+            <hr>
+            <div class="d-flex justify-content-center">
+                <input type="submit" value="Agregar" class="btn btn-success">
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+        <h1>Listado de Pasajeros</h1>
+        <hr>
+        <div class="table-responsive py-2">
+            <table class="table table-striped table-hover table-responsive-sa">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Cedula</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Telefono</th>
+                        <th>Imagen</th>
+                        <th colspan="2">Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in pasajeros %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{e.cedula}}</td>
+                        <td>{{e.nombre}}</td>
+                        <td>{{e.apellido}}</td>
+                        <td>{{e.telefono}}</td>
+                        
+                        <td>
+                        {% load static %}
+                        {% if e.imagen %}
+                            <img src="{{ e.imagen.url }}" alt="Imagen del pasajero" width="65" height="65" style="object-fit: cover; border-radius: 5px;">
+                        {% else %}
+                            <img src="{% static 'logo.png' %}" alt="Imagen no encontrada" width="65" height="50">
+                        {% endif %}
+                        </td>
+                        <td>{{e.email}}</td>
+                        <td>
+                            <a href="{% url 'pasajerosEdit' e.id %}"  class="btn btn-info">Editar</a>
+                            <a href="{% url 'pasajerosDelete' e.id %}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar a este pasajero?');">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+{% endblock body %}
